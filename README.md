@@ -141,14 +141,13 @@ We evaluated several predictive models using **TF-IDF** features and **BERT embe
 - **Pricing and population context**
 
 ### Model Performance
+| Model | AUC | Accuracy | F1 Score | Precision | Recall |
+|-------|-----|----------|----------|-----------|--------|
+| Logistic Regression | 0.959 | 0.894 | 0.904 | 0.933 | 0.894 |
+| Gradient Boosted Trees (GBT) | 0.972 | 0.912 | 0.920 | 0.942 | 0.912 |
+| Random Forest | 0.971 | 0.908 | 0.917 | 0.942 | 0.908 |
 
-| Model                        | AUC  | Accuracy | F1 Score | Precision | Recall |
-|-------------------------------|------|---------|----------|-----------|--------|
-| Logistic Regression           | 0.96 | 0.89    | 0.90     | 0.93      | 0.89   |
-| Gradient Boosted Trees (GBT)  | 0.97 | 0.91    | 0.92     | 0.94      | 0.91   |
-| Random Forest                 | 0.97 | 0.91    | 0.92     | 0.94      | 0.91   |
-
-**Best Model:** Gradient Boosted Trees (GBT) — **AUC ≈ 0.97**
+**Best Model:** Gradient Boosted Trees (GBT) — **AUC ≈ 0.972**
 
 ### Feature Importance (GBT)
 
@@ -177,6 +176,8 @@ The model can reliably distinguish high-risk vs. low-risk restaurants. Features 
 
 ### 3. Neighborhood & Ecosystem Analysis (Graph Analytics)
 
+Graph: Influence Ranking of Neighborhoods Using Business Performance
+
 **Business goal:** Understand how neighborhood dynamics influence restaurant success.
 
 * Bipartite graph: **Businesses ↔ Neighborhoods**
@@ -184,11 +185,85 @@ The model can reliably distinguish high-risk vs. low-risk restaurants. Features 
 
   * Ratings
   * Review volume
-  * Sentiment
+  * Sentiment score
   * Survival probability
+  Edge Weight: 
+avg_rating × √(review_count) × (1 − closure_prob) 
+0.4 × shrunk_sentiment + 0.3 × rating + 0.3 × survival
+<img width="282" height="48" alt="image" src="https://github.com/user-attachments/assets/ece38835-81ad-4638-acc0-c035cb7edb18" />
+
 * PageRank identifies **high-influence neighborhoods** linked to resilient businesses
 
 **Outcome:** Location decisions can be informed not just by foot traffic, but by ecosystem health.
+
+Graph: Business Similarity Graph
+
+Operational Similarity
+Binary operational attributes: Atmosphere_Casual, Takeout, Solo_dining, etc.
+Similarity computed using Jaccard-like (1 − MinHash distance) 
+
+Performance Similarity
+Similarity score: 0.3 × (1 - Δavg_success_score) + 0.3 × (1- Δavg_sentiment) + 0.4 × (1 - Δavg_rating), where Δ is normalized_difference
+Recommendation score: 0.3 × pagerank + 0.5 × avg_success_score + 0.2 × normalized_total degree 
+<img width="633" height="112" alt="image" src="https://github.com/user-attachments/assets/c1ffab72-e69d-4bca-8ee0-cace3c93c096" />
+
+
+### 3. Neighborhood & Ecosystem Analysis (Graph Analytics)
+
+#### Objective
+**Business Goal:** Understand how neighborhood dynamics influence restaurant success and identify high-performing similar businesses for benchmarking.
+
+---
+
+## 3.1 Neighborhood Influence Graph
+
+**Graph Type:** Bipartite graph (Businesses ↔ Neighborhoods)
+
+**Purpose:** Identify neighborhoods that disproportionately contribute to business resilience.
+
+### Edge Construction
+Edge weights capture performance and survival signals:
+
+- Average rating  
+- Review volume  
+- Sentiment score  
+- Survival probability  
+
+**Edge Weight:**  
+- **Weight A:** `avg_rating * sqrt(review_count) * (1 - closure_prob)`  
+- **Weight B:** `0.4 * shrunk_sentiment + 0.3 * rating + 0.3 * survival`
+
+### Analysis Method
+- Apply **PageRank** to identify high-influence neighborhoods  
+- Highlight neighborhoods connected to resilient businesses
+
+<img width="800" height="450" alt="Image" src="https://github.com/user-attachments/assets/a0b1f73c-c6e6-47cd-9bae-e54e4c2d5fdd" />
+
+**Key Insight:**  
+- Location decisions should consider ecosystem health, not just foot traffic.
+
+---
+
+## 3.2 Business Similarity Graph
+
+**Purpose:** Identify structurally and performance-wise similar businesses.
+
+### A. Operational Similarity
+- Binary operational attributes (e.g., `Atmosphere_Casual`, `Takeout`, `Solo_dining`)  
+- Similarity metric: `1 - MinHash distance`
+
+### B. Performance Similarity
+- Similarity score: `0.3 * (1 - Δavg_success_score) + 0.3 * (1 - Δavg_sentiment) + 0.4 * (1 - Δavg_rating)`  
+where `Δ` denotes normalized differences.
+- Recommendation Score: `0.3 * PageRank + 0.5 * avg_success_score + 0.2 * normalized_total_degree`
+
+<img width="600" height="600" alt="Image" src="https://github.com/user-attachments/assets/01c163a2-afc7-437d-9908-4298348d24e8" />
+
+**Key Insight:**  
+- Operationally similar businesses cluster together, revealing common service models.  
+- Performance similarity identifies high-performing peers with comparable ratings and sentiment.  
+- Combining PageRank and performance metrics yields a robust recommendation score for benchmarking and improvement.
+
 
 ---
 
@@ -232,13 +307,6 @@ The model can reliably distinguish high-risk vs. low-risk restaurants. Features 
 
 ---
 
-## Team
+## Team member
 
-**Group 5**
 Aarav Dewangan · Akshaj Chandwani · Dhruvi Gandhi · Lawrence Lin · Szuyu Chi
-
----
-
-## Academic Context
-
-Developed as part of the **M.S. in Applied Data Science** program, emphasizing real-world decision-making, scalable analytics, and business impact.
