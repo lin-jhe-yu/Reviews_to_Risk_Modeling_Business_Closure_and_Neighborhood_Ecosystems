@@ -5,7 +5,7 @@
 
 ## Executive Summary
 
-Restaurant closures represent a significant economic and operational risk in the U.S. food services industry. With **17–30% of restaurants failing in their first year** and nearly **50% closing within five years**, operators, investors, and cities face substantial losses from sunk capital, disrupted employment, and weakened neighborhood ecosystems. Despite the widespread influence of online reviews—used by **90% of customers**—these signals are rarely leveraged in a systematic, decision-oriented way.
+Restaurant closures represent a significant economic and operational risk in the U.S. food services industry. With **17–30% of restaurants failing in their first year** and nearly **50% closing within five years**, operators, investors, and cities face substantial losses from sunk capital, disrupted employment, and weakened neighborhood ecosystems. Although online reviews influence **90% of customers**, they are seldom used in a structured, decision-focused manner.
 
 ### Estimated Business Impact
 
